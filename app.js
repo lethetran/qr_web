@@ -113,23 +113,23 @@ function rerender(){
   applyFilter();
 }
 
-function renderCard(item,index){
-  const card=document.createElement("div");
-  card.className="card";
-  card.dataset.acc=item.acc;
-  card.dataset.bank=item.bankCode;
+function renderCard(item, index) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.acc = item.acc;
+  card.dataset.bank = item.bankCode;
 
-  const des=document.getElementById("desInput").value.trim();
+  const des = document.getElementById("desInput").value.trim();
 
-  card.innerHTML=`
+  card.innerHTML = `
     <div class="bank">${item.bankRaw}</div>
     <div class="acc">STK: ${item.acc}</div>
     <div class="des">Nội dung: ${des}</div>
-    <img src="${item.url}" />
+    <img src="${item.url}" alt="QR Code" />
     <div class="actions">
       <button class="mini" onclick="editItem(${index})">✏️ Sửa</button>
       <button class="mini danger" onclick="deleteItem(${index})">🗑 Xoá</button>
-      <a href="${item.url}&download=true" target="_blank">⬇ QR</a>
+      <button class="mini secondary" onclick="window.open('${item.url}&download=true')">⬇ Tải QR</button>
     </div>
   `;
   document.getElementById("preview").appendChild(card);
