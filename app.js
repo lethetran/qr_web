@@ -3,292 +3,215 @@ let errorList = [];
 
 /* ===== Chuẩn hoá text ===== */
 function normalizeText(str){
-  return str.toLowerCase().replace(/\s+/g,"").replace(/[^a-z0-9]/g,"");
+  return (str||"").toLowerCase().replace(/\s+/g,"").replace(/[^a-z0-9]/g,"");
 }
 
 /* ===== Map ngân hàng ===== */
-const BANK_MAP={
+const BANK_MAP = {
   "vietcombank":"VCB","vcb":"VCB",
   "vietinbank":"CTG","ctg":"CTG",
   "bidv":"BIDV",
   "agribank":"AGRIBANK",
   "techcombank":"TCB","tcb":"TCB",
   "mbbank":"MB","mb":"MB","nganhangquandoi":"MB",
-  "acb":"ACB","sacombank":"STB","vpbank":"VPB",
-  "tpbank":"TPB","shb":"SHB","hdbank":"HDB",
-  "ocb":"OCB","msb":"MSB","maritimebank":"MSB",
-  "eximbank":"EIB","seabank":"SEAB","vib":"VIB",
-  "scb":"SCB","abbank":"ABB","namabank":"NAB",
-  "baovietbank":"BVB","kienlongbank":"KLB",
-  "vietabank":"VAB","bacabank":"BAB",
-  "pvcombank":"PVCB","saigonbank":"SGB",
-  "vietbank":"VBB","dongabank":"DAB",
-  "lienvietpostbank":"LPB","lpbank":"LPB",
-  "oceanbank":"OJB","gpbank":"GPB","cbbank":"CBB"
+  "acb":"ACB",
+  "sacombank":"STB","stb":"STB",
+  "vpbank":"VPB",
+  "tpbank":"TPB"
 };
-
-function getBankCode(raw){
-  if(!raw) return null;
-  return BANK_MAP[normalizeText(raw)] || null;
-}
 
 /* ===== Tải file mẫu ===== */
 function downloadTemplate(){
   const ws = XLSX.utils.aoa_to_sheet([
-    ["STK","Ngân hàng"],
-    ["1049984441","Vietcombank"],
-    ["6886241206","MB Bank"],
-    ["4552733316","BIDV"]
+    ["STK","NGAN_HANG"],
+    ["0123456789","Vietcombank"]
   ]);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,"Template");
-  XLSX.writeFile(wb,"mau_qr.xlsx");
+  XLSX.utils.book_append_sheet(wb,ws,"DATA");
+  XLSX.writeFile(wb,"qr_template.xlsx");
 }
 
-/* ===== Xử lý Excel ===== */
+/* ===== Đọc Excel ===== */
 function processExcel(){
-  const fileInput=document.getElementById("fileInput");
-  const des=document.getElementById("desInput").value.trim();
-  if(!fileInput.files.length) return alert("Chọn file Excel");
-  if(!des) return alert("Nhập nội dung chuyển khoản");
+  const file = document.getElementById("fileInput").files[0];
+  const des  = document.getElementById("desInput").value || "";
 
-  qrList=[]; errorList=[];
-  document.getElementById("preview").innerHTML="";
+  if(!file){
+    alert("Vui lòng chọn file Excel");
+    return;
+  }
 
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const data=new Uint8Array(e.target.result);
-    const wb=XLSX.read(data,{type:"array"});
-    const sheet=wb.Sheets[wb.SheetNames[0]];
-    const rows=XLSX.utils.sheet_to_json(sheet,{defval:""});
+  qrList = [];
+  errorList = [];
+  document.getElementById("preview").innerHTML = "";
+  document.getElementById("errorTable").querySelector("tbody").innerHTML = "";
 
-    rows.forEach((row,idx)=>{
-      const r={};
-      Object.keys(row).forEach(k=>r[k.toLowerCase().trim()]=row[k]);
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const data = new Uint8Array(e.target.result);
+    const wb = XLSX.read(data,{type:"array"});
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet,{defval:""});
 
-      const acc=String(
-        r["stk"]||r["so tk"]||r["sotk"]||r["tai khoan"]||""
-      ).trim();
+    rows.forEach((r,i)=>{
+      const stk  = String(r.STK||"").trim();
+      const bank = normalizeText(r.NGAN_HANG);
 
-      const bankRaw=String(
-        r["ngân hàng"]||r["ngan hang"]||r["bank"]||""
-      ).trim();
-
-      const bankCode=getBankCode(bankRaw);
-
-      if(!acc){
-        errorList.push({row:idx+2,stk:"",bank:bankRaw,reason:"Thiếu số tài khoản"});
-        return;
-      }
-      if(!bankCode){
-        errorList.push({row:idx+2,stk:acc,bank:bankRaw,reason:"Không nhận diện được ngân hàng"});
+      if(!stk || !bank || !BANK_MAP[bank]){
+        errorList.push({
+          row:i+2,
+          stk,
+          bank:r.NGAN_HANG,
+          reason:"Thiếu STK hoặc ngân hàng không hợp lệ"
+        });
         return;
       }
 
-      const url=
-        `https://qr.sepay.vn/img?acc=${acc}`+
-        `&bank=${bankCode}&amount=&des=${encodeURIComponent(des)}`+
-        `&template=vietqr&download=false`;
+      const bankCode = BANK_MAP[bank];
+      const qrUrl = `https://api.vietqr.io/image/${bankCode}/${stk}?addInfo=${encodeURIComponent(des)}`;
 
-      qrList.push({acc,bankRaw,bankCode,url});
+      qrList.push({
+        stk,
+        bank:bankCode,
+        des,
+        url:qrUrl
+      });
     });
 
-    rerender();
-    buildBankFilter();
+    renderQR();
     renderErrors();
-    alert(`✅ Thành công: ${qrList.length}\n❌ Lỗi: ${errorList.length}`);
+    buildBankFilter();
   };
-  reader.readAsArrayBuffer(fileInput.files[0]);
+  reader.readAsArrayBuffer(file);
 }
 
 /* ===== Render QR ===== */
-function rerender(){
-  const preview=document.getElementById("preview");
-  preview.innerHTML="";
-  qrList.forEach((it,idx)=>renderCard(it,idx));
-  applyFilter();
-}
+function renderQR(){
+  const box = document.getElementById("preview");
+  box.innerHTML = "";
 
-function renderCard(item,index){
-  const card=document.createElement("div");
-  card.className="card";
-  card.dataset.acc=item.acc;
-  card.dataset.bank=item.bankCode;
-
-  const des=document.getElementById("desInput").value.trim();
-
-  card.innerHTML=`
-    <div class="bank">${item.bankRaw}</div>
-    <div class="acc">STK: ${item.acc}</div>
-    <div class="des">Nội dung: ${des}</div>
-    <img src="${item.url}" />
-    <div class="actions">
-      <button class="mini" onclick="editItem(${index})">✏️ Sửa</button>
-      <button class="mini danger" onclick="deleteItem(${index})">🗑 Xoá</button>
-      <a href="${item.url}&download=true" target="_blank">⬇ QR</a>
-    </div>
-  `;
-  document.getElementById("preview").appendChild(card);
-}
-
-/* ===== Sửa ===== */
-function editItem(index){
-  const it=qrList[index];
-  const newAcc=prompt("Sửa STK:",it.acc);
-  if(!newAcc) return;
-
-  const newBank=prompt("Sửa Ngân hàng:",it.bankRaw);
-  if(!newBank) return;
-
-  const code=getBankCode(newBank);
-  if(!code) return alert("Không nhận diện được ngân hàng");
-
-  it.acc=newAcc.trim();
-  it.bankRaw=newBank.trim();
-  it.bankCode=code;
-
-  const des=document.getElementById("desInput").value.trim();
-  it.url=
-    `https://qr.sepay.vn/img?acc=${it.acc}`+
-    `&bank=${it.bankCode}&amount=&des=${encodeURIComponent(des)}`+
-    `&template=vietqr&download=false`;
-
-  rerender();
-}
-
-/* ===== Xoá ===== */
-function deleteItem(index){
-  if(!confirm("Bạn chắc chắn muốn xoá?")) return;
-  qrList.splice(index,1);
-  rerender();
-}
-
-/* ===== Filter ===== */
-function applyFilter(){
-  const kw=document.getElementById("searchInput").value.trim();
-  const bank=document.getElementById("bankFilter").value;
-
-  document.querySelectorAll(".card").forEach(c=>{
-    const acc=c.dataset.acc;
-    const b=c.dataset.bank;
-    let show=true;
-    if(kw && !acc.includes(kw)) show=false;
-    if(bank && b!==bank) show=false;
-    c.style.display=show?"flex":"none";
+  qrList.forEach((it,idx)=>{
+    const div = document.createElement("div");
+    div.className="card";
+    div.innerHTML=`
+      <div class="bank">${it.bank}</div>
+      <div class="acc">${it.stk}</div>
+      <div class="des">${it.des}</div>
+      <img src="${it.url}">
+      <div class="actions">
+        <button class="mini danger" onclick="deleteQR(${idx})">Xoá</button>
+      </div>
+      <a href="${it.url}" target="_blank">Mở ảnh</a>
+    `;
+    box.appendChild(div);
   });
 }
 
-/* ===== Build filter ===== */
-function buildBankFilter(){
-  const sel=document.getElementById("bankFilter");
-  sel.innerHTML=`<option value="">🏷 Tất cả ngân hàng</option>`;
-  [...new Set(qrList.map(i=>i.bankCode))].forEach(b=>{
-    const o=document.createElement("option");
-    o.value=b;o.textContent=b;sel.appendChild(o);
-  });
+function deleteQR(i){
+  qrList.splice(i,1);
+  renderQR();
 }
 
-/* ===== HIỂN THỊ LỖI ===== */
+/* ===== Render lỗi ===== */
 function renderErrors(){
-  const sec=document.getElementById("errorSection");
-  const tbody=document.querySelector("#errorTable tbody");
-  tbody.innerHTML="";
+  const sec = document.getElementById("errorSection");
+  const body = document.querySelector("#errorTable tbody");
 
-  if(!errorList.length){
+  if(errorList.length===0){
     sec.style.display="none";
     return;
   }
+  sec.style.display="block";
+  body.innerHTML="";
 
   errorList.forEach(e=>{
     const tr=document.createElement("tr");
     tr.innerHTML=`
       <td>${e.row}</td>
-      <td>${e.stk||"-"}</td>
-      <td>${e.bank||"-"}</td>
+      <td>${e.stk}</td>
+      <td>${e.bank}</td>
       <td>${e.reason}</td>
     `;
-    tbody.appendChild(tr);
+    body.appendChild(tr);
   });
-  sec.style.display="block";
 }
 
-/* ===== Xuất Excel kết quả ===== */
+/* ===== Filter ===== */
+function buildBankFilter(){
+  const sel = document.getElementById("bankFilter");
+  sel.innerHTML=`<option value="">🏷 Tất cả ngân hàng</option>`;
+  [...new Set(qrList.map(i=>i.bank))].forEach(b=>{
+    const o=document.createElement("option");
+    o.value=b;o.textContent=b;
+    sel.appendChild(o);
+  });
+}
+
+function applyFilter(){
+  const key  = document.getElementById("searchInput").value.trim();
+  const bank = document.getElementById("bankFilter").value;
+  const cards = document.querySelectorAll(".card");
+
+  cards.forEach(c=>{
+    const acc = c.querySelector(".acc").textContent;
+    const b   = c.querySelector(".bank").textContent;
+
+    let ok=true;
+    if(key && !acc.includes(key)) ok=false;
+    if(bank && bank!==b) ok=false;
+
+    c.style.display = ok?"":"none";
+  });
+}
+
+/* ===== Xuất Excel kết quả (1 sheet, tô đỏ lỗi) ===== */
 function exportResultExcel(){
-  if(!qrList.length && !errorList.length){
-    alert("Chưa có dữ liệu");
-    return;
-  }
+  const data = [
+    ["STK","NGÂN HÀNG","TRẠNG THÁI","LỖI"]
+  ];
 
-  const rows = [];
-
-  // ===== OK rows =====
-  qrList.forEach(i => {
-    rows.push({
-      "STT": rows.length + 1,
-      "Dòng Excel": "",
-      "STK": i.acc,
-      "Ngân hàng": i.bankRaw,
-      "Mã NH": i.bankCode,
-      "Link QR": i.url,
-      "Trạng thái": "OK",
-      "Lỗi": ""
-    });
+  qrList.forEach(i=>{
+    data.push([i.stk,i.bank,"OK",""]);
   });
 
-  // ===== ERROR rows =====
-  errorList.forEach(e => {
-    rows.push({
-      "STT": rows.length + 1,
-      "Dòng Excel": e.row,
-      "STK": e.stk,
-      "Ngân hàng": e.bank,
-      "Mã NH": "",
-      "Link QR": "",
-      "Trạng thái": "LỖI",
-      "Lỗi": e.reason
-    });
+  errorList.forEach(e=>{
+    data.push([e.stk,e.bank,"ERROR",e.reason]);
   });
 
-  const ws = XLSX.utils.json_to_sheet(rows);
+  const ws = XLSX.utils.aoa_to_sheet(data);
 
-  // ===== TÔ MÀU DÒNG LỖI =====
-  const range = XLSX.utils.decode_range(ws["!ref"]);
-
-  for(let R = range.s.r + 1; R <= range.e.r; R++){
-    const statusCell = ws[XLSX.utils.encode_cell({ r: R, c: 6 })]; // cột "Trạng thái"
-    if(statusCell && statusCell.v === "LỖI"){
-      for(let C = range.s.c; C <= range.e.c; C++){
-        const cellAddr = XLSX.utils.encode_cell({ r: R, c: C });
-        if(!ws[cellAddr]) continue;
-
-        ws[cellAddr].s = {
-          fill: {
-            fgColor: { rgb: "FFCCCC" }   // nền đỏ nhạt
-          }
-        };
-      }
+  // tô đỏ dòng lỗi
+  data.forEach((r,i)=>{
+    if(r[2]==="ERROR"){
+      ["A","B","C","D"].forEach(c=>{
+        const cell = ws[c+(i+1)];
+        if(cell){
+          cell.s = { fill:{fgColor:{rgb:"FFCDD2"}} };
+        }
+      });
     }
-  }
+  });
 
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Ket_qua");
-
-  XLSX.writeFile(wb, "ket_qua_qr.xlsx");
+  XLSX.utils.book_append_sheet(wb,ws,"RESULT");
+  XLSX.writeFile(wb,"qr_result.xlsx");
 }
-
 
 /* ===== Xuất PDF ===== */
 async function exportPDF(){
-  if(!qrList.length) return alert("Chưa có QR");
-  const {jsPDF}=window.jspdf;
-  const pdf=new jsPDF();
+  if(qrList.length===0){
+    alert("Chưa có QR để xuất PDF");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
 
   for(let i=0;i<qrList.length;i++){
     if(i>0) pdf.addPage();
-    const it=qrList[i];
-    pdf.text(`${it.bankRaw} - ${it.acc}`,10,10);
-    const img=await loadImage(it.url);
-    pdf.addImage(img,"PNG",20,20,160,160);
+    const img = await loadImage(qrList[i].url);
+    pdf.addImage(img,"PNG",25,30,160,160);
+    pdf.text(`${qrList[i].bank} - ${qrList[i].stk}`,20,20);
   }
   pdf.save("qr_output.pdf");
 }
