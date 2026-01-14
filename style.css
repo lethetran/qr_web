@@ -1,86 +1,158 @@
 :root {
-  --bg:#f5f7fb; --card:#fff; --primary:#2563eb; --danger:#dc2626;
-  --text:#1f2933; --muted:#6b7280;
-}
-*{box-sizing:border-box}
-
-body{
-  margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:var(--bg);color:var(--text);
-}
-
-header{
-  padding:20px;background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;
+  --bg: #fff5f7; 
+  --card: #ffffff;
+  --primary: #ff85a1; /* Hồng Pastel */
+  --secondary: #a29bfe; /* Tím Pastel */
+  --accent: #55efc4; 
+  --text: #4b4b4b;
+  --muted: #a0a0a0;
+  --danger: #ff7675;
+  --shadow: 0 8px 30px rgba(255, 133, 161, 0.15);
 }
 
-.panel{
-  background:#fff;margin:20px;padding:16px;border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
+* { box-sizing: border-box; transition: all 0.3s ease; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
 }
 
-.ghost{
-  background:transparent;border:1px dashed var(--primary);color:var(--primary);
-  padding:8px 12px;border-radius:6px;cursor:pointer;
+header {
+  padding: 50px 20px;
+  background: linear-gradient(135deg, #ff85a1 0%, #a29bfe 100%);
+  color: #fff;
+  text-align: center;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  box-shadow: var(--shadow);
 }
 
-.form{display:grid;gap:10px;margin-top:12px}
-.form label{font-size:14px;color:var(--muted)}
-.form input{padding:10px;border-radius:6px;border:1px solid #d1d5db}
+header h1 { margin: 0; font-size: 2.2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+header p { opacity: 0.9; font-weight: 300; margin-top: 10px; }
 
-.actions{display:flex;gap:10px}
-
-button{
-  background:var(--primary);border:none;color:#fff;
-  padding:10px 16px;border-radius:8px;cursor:pointer;font-size:14px
-}
-button.secondary{background:#374151}
-button:hover{opacity:.9}
-
-.toolbar{
-  display:flex;flex-wrap:wrap;gap:10px;margin:10px 20px
-}
-.toolbar input,.toolbar select{
-  padding:8px;border-radius:6px;border:1px solid #d1d5db
+.panel {
+  background: var(--card);
+  margin: -40px 20px 20px;
+  padding: 30px;
+  border-radius: 30px;
+  box-shadow: var(--shadow);
+  border: 4px solid #fff;
 }
 
-/* GRID QR */
-.grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;padding:0 20px 30px
+.ghost {
+  background: #fff;
+  border: 2px dashed var(--primary);
+  color: var(--primary);
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 20px;
 }
 
-/* CARD */
-.card{
-  background:var(--card);border-radius:14px;padding:14px;
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
-  display:flex;flex-direction:column;align-items:center
-}
-.card .bank{font-weight:600}
-.card .acc{font-size:13px;color:var(--muted)}
-.card .des{font-size:12px;margin-bottom:6px}
-.card img{
-  width:100%;max-width:200px;aspect-ratio:1/1;object-fit:contain;margin:8px 0
-}
-.card .actions{display:flex;gap:6px;margin-top:auto}
+.ghost:hover { background: var(--bg); transform: scale(1.05); }
 
-button.mini{
-  padding:4px 8px;font-size:12px;border-radius:6px;border:none;
-  background:var(--primary);color:#fff;cursor:pointer
-}
-button.mini.danger{background:var(--danger)}
+.form { display: grid; gap: 20px; }
+.form label { font-weight: 700; font-size: 14px; color: var(--primary); margin-left: 10px; display: block; margin-bottom: 5px; }
 
-.card a{font-size:12px;text-decoration:none;color:var(--primary)}
+.form input {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 20px;
+  border: 2px solid #f0f0f0;
+  background: #fafafa;
+  outline: none;
+}
 
-/* ERROR TABLE */
-#errorSection{
-  margin:20px;background:#fff3f3;padding:12px;border-radius:10px
-}
-#errorSection h2{color:#dc2626}
+.form input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 10px rgba(255,133,161,0.2); }
 
-#errorTable{
-  width:100%;border-collapse:collapse;margin-top:10px;font-size:13px
+.actions { display: flex; gap: 15px; margin-top: 10px; }
+
+button {
+  flex: 1;
+  background: var(--primary);
+  border: none;
+  color: #fff;
+  padding: 14px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 6px 15px rgba(255, 133, 161, 0.3);
 }
-#errorTable th{background:#fee2e2}
-#errorTable td,#errorTable th{
-  border:1px solid #fca5a5;padding:6px;text-align:left
+
+button.secondary { background: var(--secondary); box-shadow: 0 6px 15px rgba(162, 155, 254, 0.3); }
+button:hover { transform: translateY(-3px); filter: brightness(1.1); }
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 40px 20px 20px;
+  justify-content: center;
 }
+
+.toolbar input, .toolbar select {
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: 2px solid #fff;
+  box-shadow: var(--shadow);
+  outline: none;
+}
+
+h2 { text-align: center; color: var(--primary); margin-top: 40px; font-size: 1.8rem; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  padding: 20px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 35px;
+  padding: 25px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 3px solid transparent;
+}
+
+.card:hover { border-color: var(--primary); transform: translateY(-5px); }
+
+.card .bank { font-weight: 800; color: var(--primary); font-size: 1.2rem; margin-bottom: 5px; }
+.card .acc { font-family: 'Courier New', monospace; background: #fff0f3; padding: 4px 12px; border-radius: 10px; font-size: 14px; }
+.card img { width: 100%; border-radius: 20px; margin: 15px 0; border: 1px solid #eee; }
+
+.card .actions { width: 100%; }
+button.mini { padding: 8px; font-size: 12px; }
+button.mini.danger { background: var(--danger); box-shadow: 0 4px 10px rgba(255,118,117,0.3); }
+
+#errorSection {
+  margin: 30px 20px;
+  background: #fff0f0;
+  padding: 25px;
+  border-radius: 30px;
+  border: 2px dashed var(--danger);
+}
+
+.cute-footer {
+  margin-top: 60px;
+  padding: 40px 20px;
+  background: white;
+  text-align: center;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  box-shadow: 0 -10px 40px rgba(255, 133, 161, 0.1);
+}
+
+.footer-content p { margin: 8px 0; font-size: 15px; }
+.footer-content strong { color: var(--primary); font-size: 1.2rem; }
+.footer-content a { color: var(--secondary); text-decoration: none; font-weight: 800; }
+.footer-content a:hover { color: var(--primary); text-decoration: underline; }

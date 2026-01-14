@@ -2,54 +2,56 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>QR Generator - SePay</title>
+  <title>QR Magic Generator - Lê Thế Trân</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>💳 Tạo QR chuyển khoản</h1>
-    <p>Import Excel → Chuẩn hoá → Tạo QR → Sửa/Xoá → Xuất kết quả</p>
+    <h1>✨ QR Magic Generator ✨</h1>
+    <p>Biến file Excel khô khan thành mã QR xịn xò trong 1 nốt nhạc! 🎵</p>
   </header>
 
   <section class="panel">
-    <button class="ghost" onclick="downloadTemplate()">📥 Tải file Excel mẫu</button>
+    <button class="ghost" onclick="downloadTemplate()">🌸 Tải file mẫu (Excel)</button>
 
     <div class="form">
-      <label>📄 File Excel</label>
-      <input type="file" id="fileInput" accept=".xlsx,.xls" />
+      <div>
+        <label>📁 Chọn file Excel của bạn</label>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" style="width: 100%"/>
+      </div>
 
-      <label>✏️ Nội dung chuyển khoản</label>
-      <input type="text" id="desInput" placeholder="VD: Thanh toan hoc phi" />
+      <div>
+        <label>💬 Lời nhắn dễ thương (Nội dung CK)</label>
+        <input type="text" id="desInput" placeholder="Ví dụ: Hippo chuyển tiền học phí..." />
+      </div>
 
       <div class="actions">
-        <button onclick="processExcel()">🚀 Tạo QR</button>
-        <button class="secondary" onclick="exportPDF()">📄 Xuất PDF</button>
+        <button onclick="processExcel()">🪄 Tạo mã ngay</button>
+        <button class="secondary" onclick="exportPDF()">🎀 Xuất file PDF</button>
       </div>
     </div>
   </section>
 
-  <!-- TOOLBAR -->
   <section>
     <div class="toolbar">
-      <input type="text" id="searchInput" placeholder="🔍 Tìm theo STK..." oninput="applyFilter()" />
+      <input type="text" id="searchInput" placeholder="🔍 Tìm STK..." oninput="applyFilter()" />
       <select id="bankFilter" onchange="applyFilter()">
-        <option value="">🏷 Tất cả ngân hàng</option>
+        <option value="">🌈 Tất cả ngân hàng</option>
       </select>
-      <button onclick="exportResultExcel()">📄 Xuất Excel kết quả</button>
+      <button class="secondary" onclick="exportResultExcel()">📊 Xuất Excel kết quả</button>
     </div>
 
-    <h2>Kết quả QR</h2>
+    <h2>⭐ Danh sách QR của bạn ⭐</h2>
     <div id="preview" class="grid"></div>
   </section>
 
-  <!-- HIỂN THỊ LỖI -->
   <section id="errorSection" style="display:none;">
-    <h2>❌ Danh sách lỗi</h2>
+    <h2>❌ Danh sách lỗi cần sửa</h2>
     <table id="errorTable">
       <thead>
         <tr>
-          <th>Dòng Excel</th>
+          <th>Dòng</th>
           <th>STK</th>
           <th>Ngân hàng</th>
           <th>Lý do</th>
@@ -59,11 +61,16 @@
     </table>
   </section>
 
-  <!-- Libs -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="app.js"></script>
+  <footer class="cute-footer">
+    <div class="footer-content">
+      <p>✨ Tạo bởi <strong>Lê Thế Trân</strong> ✨</p>
+      <p>🎓 Khoa Hệ thống Thông tin</p>
+      <p>📞 Liên hệ: <a href="tel:0332811699">0332811699</a></p>
+    </div>
+  </footer>
 
-
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
