@@ -2,74 +2,86 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>QR Generator - SePay</title>
+  <title>✨ Cute QR Generator - SePay</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>💳 Tạo QR chuyển khoản</h1>
-    <p>Import Excel → Chuẩn hoá → Tạo QR → Sửa/Xoá → Xuất kết quả</p>
-  </header>
+  
+  <div class="main-container">
+    <header>
+      <h1>💳 Tạo QR Cute Phô Mai Que 🧀</h1>
+      <p>Import Excel ➔ Chuẩn hoá ➔ Tạo QR Xinh xắn</p>
+    </header>
 
-  <section class="panel">
-    <button class="ghost" onclick="downloadTemplate()">📥 Tải file Excel mẫu</button>
-
-    <div class="form">
-      <label>📄 File Excel</label>
-      <input type="file" id="fileInput" accept=".xlsx,.xls" />
-
-      <label>✏️ Nội dung chuyển khoản</label>
-      <input type="text" id="desInput" placeholder="VD: Thanh toan hoc phi" />
-
-      <div class="actions">
-        <button onclick="processExcel()">🚀 Tạo QR</button>
-        <button class="secondary" onclick="exportPDF()">📄 Xuất PDF</button>
+    <section class="panel glass">
+      <div class="panel-header">
+        <h3>🛠 Công cụ</h3>
+        <button class="ghost" onclick="downloadTemplate()">📥 Tải file mẫu</button>
       </div>
-    </div>
-  </section>
 
-  <!-- TOOLBAR -->
-  <section>
-    <div class="toolbar">
-      <input type="text" id="searchInput" placeholder="🔍 Tìm theo STK..." oninput="applyFilter()" />
-      <select id="bankFilter" onchange="applyFilter()">
-        <option value="">🏷 Tất cả ngân hàng</option>
-      </select>
-      <button onclick="exportResultExcel()">📄 Xuất Excel kết quả</button>
-    </div>
+      <div class="form">
+        <div class="input-group">
+          <label>📂 Chọn File Excel</label>
+          <input type="file" id="fileInput" accept=".xlsx,.xls" class="custom-file-input"/>
+        </div>
 
-    <h2>Kết quả QR</h2>
-    <div id="preview" class="grid"></div>
-  </section>
+        <div class="input-group">
+          <label>✏️ Nội dung chuyển khoản</label>
+          <input type="text" id="desInput" placeholder="VD: Mua trà sữa cho bé..." />
+        </div>
 
-  <!-- HIỂN THỊ LỖI -->
-  <section id="errorSection" style="display:none;">
-    <h2>❌ Danh sách lỗi</h2>
-    <table id="errorTable">
-      <thead>
-        <tr>
-          <th>Dòng Excel</th>
-          <th>STK</th>
-          <th>Ngân hàng</th>
-          <th>Lý do</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+        <div class="actions center">
+          <button onclick="processExcel()" class="btn-primary">🚀 Tạo QR Ngay</button>
+          <button class="btn-secondary" onclick="exportPDF()">📄 Xuất PDF</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="toolbar-section">
+      <div class="toolbar glass-sm">
+        <input type="text" id="searchInput" placeholder="🔍 Tìm theo STK..." oninput="applyFilter()" />
+        <select id="bankFilter" onchange="applyFilter()">
+          <option value="">🏦 Tất cả ngân hàng</option>
+        </select>
+        <button onclick="exportResultExcel()" class="btn-success">📊 Xuất Excel</button>
+      </div>
+
+      <h2 class="section-title">✨ Kết quả lung linh</h2>
+      <div id="preview" class="grid"></div>
+    </section>
+
+    <section id="errorSection" style="display:none;" class="glass-error">
+      <h2>❌ Oups! Có xíu lỗi nè</h2>
+      <table id="errorTable">
+        <thead>
+          <tr>
+            <th>Dòng Excel</th>
+            <th>STK</th>
+            <th>Ngân hàng</th>
+            <th>Lý do</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
 
   <footer>
-    By <b>Lê Thế Trân</b> - Zalo <b>0332811699</b> - Gmail <b>transg87@gmail.com</b>
+    <div class="marquee">
+      <div class="marquee-content">
+        By <b>Lê Thế Trân</b> - Zalo <b>0332811699</b> - Gmail <b>transg87@gmail.com</b> &nbsp; • &nbsp; Chúc bạn một ngày tốt lành! 🍀 &nbsp; • &nbsp; Hệ thống tạo QR tự động siêu tốc &nbsp; • &nbsp;
+        By <b>Lê Thế Trân</b> - Zalo <b>0332811699</b> - Gmail <b>transg87@gmail.com</b> &nbsp; • &nbsp; Chúc bạn một ngày tốt lành! 🍀 &nbsp; • &nbsp; Hệ thống tạo QR tự động siêu tốc &nbsp; • &nbsp;
+      </div>
+    </div>
   </footer>
 
-  <!-- Libs -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
-<!-- App -->
-<script src="app.js"></script>
+  <script src="app.js"></script>
 
 </body>
 </html>
