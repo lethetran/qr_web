@@ -113,26 +113,27 @@ function rerender(){
   applyFilter();
 }
 
-function renderCard(item,index){
-  const card=document.createElement("div");
-  card.className="card";
-  card.dataset.acc=item.acc;
-  card.dataset.bank=item.bankCode;
+function renderCard(item, index) {
+  const preview = document.getElementById("preview");
+  const des = document.getElementById("desInput").value.trim();
 
-  const des=document.getElementById("desInput").value.trim();
+  const card = document.createElement("div");
+  card.className = "card-qr"; // Đổi từ 'card' thành 'card-qr'
+  card.dataset.acc = item.acc;
+  card.dataset.bank = item.bankCode;
 
-  card.innerHTML=`
-    <div class="bank">${item.bankRaw}</div>
-    <div class="acc">STK: ${item.acc}</div>
-    <div class="des">Nội dung: ${des}</div>
-    <img src="${item.url}" />
-    <div class="actions">
-      <button class="mini" onclick="editItem(${index})">✏️ Sửa</button>
-      <button class="mini danger" onclick="deleteItem(${index})">🗑 Xoá</button>
-      <a href="${item.url}&download=true" target="_blank">⬇ QR</a>
+  card.innerHTML = `
+    <div style="font-weight: 700; color: var(--primary); margin-bottom: 5px;">${item.bankRaw}</div>
+    <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">STK: ${item.acc}</div>
+    <img src="${item.url}" style="width: 100%; border-radius: 12px; margin-bottom: 15px;" />
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px; font-style: italic;">"${des}"</div>
+    <div class="form-actions" style="gap: 8px;">
+      <button class="btn-ghost" style="flex:1; margin-bottom:0; font-size:12px; padding: 8px;" onclick="editItem(${index})">Sửa</button>
+      <button class="btn-ghost" style="flex:1; margin-bottom:0; font-size:12px; padding: 8px; color: #ff7675; background: #fff5f5;" onclick="deleteItem(${index})">Xoá</button>
     </div>
+    <a href="${item.url}&download=true" target="_blank" style="display: block; margin-top: 10px; text-decoration: none; color: var(--secondary); font-weight: 700; font-size: 13px;">⬇ Tải mã QR</a>
   `;
-  document.getElementById("preview").appendChild(card);
+  preview.appendChild(card);
 }
 
 /* ================= SỬA ================= */

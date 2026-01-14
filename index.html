@@ -5,67 +5,76 @@
   <title>QR Magic Generator - Lê Thế Trân</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>✨ QR Magic Generator ✨</h1>
+  <div class="container">
+    <header>
+      <div class="header-badge">Tiện ích miễn phí</div>
+      <h1>✨ QR Magic Generator ✨</h1>
+      <p>Tạo mã QR ngân hàng hàng loạt trong nháy mắt</p>
+    </header>
 
-  </header>
+    <section class="card-panel">
+      <button class="btn-ghost" onclick="downloadTemplate()">🌸 Tải file mẫu (Excel)</button>
 
-  <section class="panel">
-    <button class="ghost" onclick="downloadTemplate()">🌸 Tải file mẫu (Excel)</button>
+      <div class="form-grid">
+        <div class="input-group">
+          <label>📁 Chọn file Excel của bạn</label>
+          <input type="file" id="fileInput" accept=".xlsx,.xls" />
+        </div>
 
-    <div class="form">
-      <div>
-        <label>📁 Chọn file Excel của bạn</label>
-        <input type="file" id="fileInput" accept=".xlsx,.xls" style="width: 100%"/>
+        <div class="input-group">
+          <label>💬 Nội dung chuyển khoản</label>
+          <input type="text" id="desInput" placeholder="Ví dụ: Hippo chuyển tiền..." />
+        </div>
       </div>
 
-      <div>
-        <label>💬 Lời nhắn dễ thương (Nội dung CK)</label>
-        <input type="text" id="desInput" placeholder="Ví dụ: Hippo chuyển tiền học phí..." />
+      <div class="form-actions">
+        <button class="btn-main" onclick="processExcel()">🪄 Tạo mã ngay</button>
+        <button class="btn-secondary" onclick="exportPDF()">🎀 Xuất file PDF</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="toolbar-glass">
+        <input type="text" id="searchInput" placeholder="🔍 Tìm STK..." oninput="applyFilter()" />
+        <select id="bankFilter" onchange="applyFilter()">
+          <option value="">🌈 Tất cả ngân hàng</option>
+        </select>
+        <button class="btn-secondary" style="padding: 10px 20px;" onclick="exportResultExcel()">📊 Xuất Excel kết quả</button>
       </div>
 
-      <div class="actions">
-        <button onclick="processExcel()">🪄 Tạo mã ngay</button>
-        <button class="secondary" onclick="exportPDF()">🎀 Xuất file PDF</button>
+      <h2 style="text-align: center; color: var(--primary); margin-bottom: 30px;">⭐ Danh sách QR của bạn ⭐</h2>
+      <div id="preview" class="qr-grid"></div>
+    </section>
+
+    <section id="errorSection" style="display:none; margin-top: 50px;">
+      <h2 style="color: #e74c3c;">❌ Danh sách lỗi cần sửa</h2>
+      <div class="card-panel">
+        <table id="errorTable" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--primary-light);">
+              <th style="padding: 10px; text-align: left;">Dòng</th>
+              <th style="padding: 10px; text-align: left;">STK</th>
+              <th style="padding: 10px; text-align: left;">Ngân hàng</th>
+              <th style="padding: 10px; text-align: left;">Lý do</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <section>
-    <div class="toolbar">
-      <input type="text" id="searchInput" placeholder="🔍 Tìm STK..." oninput="applyFilter()" />
-      <select id="bankFilter" onchange="applyFilter()">
-        <option value="">🌈 Tất cả ngân hàng</option>
-      </select>
-      <button class="secondary" onclick="exportResultExcel()">📊 Xuất Excel kết quả</button>
-    </div>
-
-    <h2>⭐ Danh sách QR của bạn ⭐</h2>
-    <div id="preview" class="grid"></div>
-  </section>
-
-  <section id="errorSection" style="display:none;">
-    <h2>❌ Danh sách lỗi cần sửa</h2>
-    <table id="errorTable">
-      <thead>
-        <tr>
-          <th>Dòng</th>
-          <th>STK</th>
-          <th>Ngân hàng</th>
-          <th>Lý do</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
-
-  <footer class="cute-footer">
+  <footer class="footer-fixed">
+    <div class="footer-blur"></div>
     <div class="footer-content">
-      <p>✨ Tạo bởi <strong>Lê Thế Trân</strong> ✨</p>
-      <p>🎓 Khoa Hệ thống Thông tin</p>
-      <p>📞 Liên hệ: <a href="tel:0332811699">0332811699</a></p>
+      <div class="footer-item">Tạo bởi <strong>Lê Thế Trân</strong></div>
+      <div class="footer-sep"></div>
+      <div class="footer-item">🎓 Hệ thống Thông tin</div>
+      <div class="footer-sep"></div>
+      <div class="footer-item">📞 <a href="tel:0332811699">0332811699</a></div>
     </div>
   </footer>
 
