@@ -6,9 +6,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h2>📄 Tạo QR từ Excel</h2>
+  <h2>💳 Tạo QR từ Excel</h2>
 
   <div class="box">
+    <button onclick="downloadTemplate()">📥 Tải file Excel mẫu</button>
+    <br><br>
+
     <input type="file" id="fileInput" accept=".xlsx,.xls" />
     <br><br>
 
@@ -16,14 +19,14 @@
     <input type="text" id="desInput" placeholder="VD: Thanh toan hoc phi" />
     <br><br>
 
-    <button onclick="processExcel()">Tạo QR</button>
-    <button onclick="exportPDF()">Xuất PDF</button>
+    <button onclick="processExcel()">🚀 Tạo QR</button>
+    <button onclick="exportPDF()">📄 Xuất PDF</button>
   </div>
 
   <h3>Kết quả</h3>
-  <div id="preview"></div>
+  <div id="preview" class="grid"></div>
 
-  <!-- Thư viện -->
+  <!-- Libs -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="app.js"></script>

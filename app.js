@@ -1,117 +1,46 @@
 let qrList = [];
 
-/* ====== Chuẩn hoá text ====== */
+/* ========= Chuẩn hoá text ========= */
 function normalizeText(str) {
   return str
     .toLowerCase()
-    .replace(/\s+/g, "")        // bỏ khoảng trắng
-    .replace(/[^a-z0-9]/g, ""); // bỏ ký tự đặc biệt
+    .replace(/\s+/g, "")
+    .replace(/[^a-z0-9]/g, "");
 }
 
-/* ====== Map ngân hàng đầy đủ ====== */
+/* ========= Map ngân hàng ========= */
 const BANK_MAP = {
-  // Vietcombank
-  "vietcombank": "VCB",
-  "vcb": "VCB",
-
-  // VietinBank
-  "vietinbank": "CTG",
-  "ctg": "CTG",
-
-  // BIDV
+  "vietcombank": "VCB", "vcb": "VCB",
+  "vietinbank": "CTG", "ctg": "CTG",
   "bidv": "BIDV",
-
-  // Agribank
   "agribank": "AGRIBANK",
-
-  // Techcombank
-  "techcombank": "TCB",
-  "tcb": "TCB",
-
-  // MB Bank
-  "mbbank": "MB",
-  "mb": "MB",
-  "nganhangquandoi": "MB",
-
-  // ACB
+  "techcombank": "TCB", "tcb": "TCB",
+  "mbbank": "MB", "mb": "MB", "nganhangquandoi": "MB",
   "acb": "ACB",
-
-  // Sacombank
   "sacombank": "STB",
-  "stb": "STB",
-
-  // VPBank
   "vpbank": "VPB",
-
-  // TPBank
   "tpbank": "TPB",
-
-  // SHB
   "shb": "SHB",
-
-  // HDBank
   "hdbank": "HDB",
-
-  // OCB
   "ocb": "OCB",
-
-  // MSB
-  "msb": "MSB",
-  "maritimebank": "MSB",
-
-  // Eximbank
+  "msb": "MSB", "maritimebank": "MSB",
   "eximbank": "EIB",
-
-  // SeABank
   "seabank": "SEAB",
-
-  // VIB
   "vib": "VIB",
-
-  // SCB
   "scb": "SCB",
-
-  // ABBank
   "abbank": "ABB",
-
-  // Nam A Bank
   "namabank": "NAB",
-
-  // BaoViet Bank
   "baovietbank": "BVB",
-
-  // KienlongBank
   "kienlongbank": "KLB",
-
-  // Viet A Bank
   "vietabank": "VAB",
-
-  // Bac A Bank
   "bacabank": "BAB",
-
-  // PVcomBank
   "pvcombank": "PVCB",
-
-  // SaigonBank
   "saigonbank": "SGB",
-
-  // VietBank
   "vietbank": "VBB",
-
-  // DongA Bank
   "dongabank": "DAB",
-
-  // LienVietPostBank / LPBank
-  "lienvietpostbank": "LPB",
-  "lpbank": "LPB",
-
-  // OceanBank
+  "lienvietpostbank": "LPB", "lpbank": "LPB",
   "oceanbank": "OJB",
-
-  // GPBank
   "gpbank": "GPB",
-
-  // CBBank
   "cbbank": "CBB"
 };
 
@@ -121,37 +50,54 @@ function getBankCode(rawName) {
   return BANK_MAP[key] || null;
 }
 
-/* ====== Xử lý Excel ====== */
+/* ========= Tải file Excel mẫu ========= */
+function downloadTemplate() {
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet([
+    ["STK", "Ngân hàng"],
+    ["1049984441", "Vietcombank"],
+    ["6886241206", "MB Bank"],
+    ["4552733316", "BIDV"]
+  ]);
+  XLSX.utils.book_append_sheet(wb, ws, "Template");
+  XLSX.writeFile(wb, "mau_qr.xlsx");
+}
+
+/* ========= Xử lý Excel ========= */
 function processExcel() {
   const fileInput = document.getElementById("fileInput");
   const des = document.getElementById("desInput").value.trim();
 
-  if (!fileInput.files.length) {
-    alert("❗ Chọn file Excel trước");
-    return;
-  }
-  if (!des) {
-    alert("❗ Nhập nội dung chuyển khoản (des)");
-    return;
-  }
+  if (!fileInput.files.length) return alert("❗ Chọn file Excel");
+  if (!des) return alert("❗ Nhập nội dung (des)");
 
   const file = fileInput.files[0];
   const reader = new FileReader();
 
   reader.onload = e => {
     const data = new Uint8Array(e.target.result);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(sheet);
+    const wb = XLSX.read(data, { type: "array" });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
     qrList = [];
     document.getElementById("preview").innerHTML = "";
 
     let ok = 0, fail = 0;
 
-    rows.forEach((row, idx) => {
-      const acc = String(row["STK"] || "").trim();
-      const bankRaw = String(row["Ngân hàng"] || "").trim();
+    rows.forEach(row => {
+      // chuẩn hoá key
+      const r = {};
+      Object.keys(row).forEach(k => r[k.toLowerCase().trim()] = row[k]);
+
+      const acc = String(
+        r["stk"] || r["so tk"] || r["sotk"] || r["tai khoan"] || ""
+      ).trim();
+
+      const bankRaw = String(
+        r["ngân hàng"] || r["ngan hang"] || r["bank"] || ""
+      ).trim();
+
       const bankCode = getBankCode(bankRaw);
 
       if (!acc || !bankCode) {
@@ -168,26 +114,31 @@ function processExcel() {
 
       qrList.push({ acc, bankRaw, url });
 
-      const img = document.createElement("img");
-      img.src = url;
-      img.title = `${bankRaw} - ${acc}`;
-      document.getElementById("preview").appendChild(img);
+      // ==== hiển thị đẹp ====
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="bank">${bankRaw}</div>
+        <div class="acc">${acc}</div>
+        <img src="${url}" />
+        <a href="${url}&download=true" target="_blank">⬇ Tải QR</a>
+      `;
+
+      document.getElementById("preview").appendChild(card);
 
       ok++;
     });
 
-    alert(`✅ Tạo QR thành công: ${ok}\n❌ Bỏ qua: ${fail}`);
+    alert(`✅ Thành công: ${ok}\n❌ Bỏ qua: ${fail}`);
   };
 
   reader.readAsArrayBuffer(file);
 }
 
-/* ====== Xuất PDF ====== */
+/* ========= Xuất PDF ========= */
 async function exportPDF() {
-  if (!qrList.length) {
-    alert("❗ Chưa có QR để xuất");
-    return;
-  }
+  if (!qrList.length) return alert("❗ Chưa có QR");
 
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF();
@@ -195,10 +146,10 @@ async function exportPDF() {
   for (let i = 0; i < qrList.length; i++) {
     if (i > 0) pdf.addPage();
 
-    const item = qrList[i];
-    pdf.text(`${item.bankRaw} - ${item.acc}`, 10, 10);
+    const it = qrList[i];
+    pdf.text(`${it.bankRaw} - ${it.acc}`, 10, 10);
 
-    const img = await loadImage(item.url);
+    const img = await loadImage(it.url);
     pdf.addImage(img, "PNG", 20, 20, 160, 160);
   }
 
