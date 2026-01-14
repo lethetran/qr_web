@@ -3,10 +3,7 @@ let errorList = [];
 
 /* ===== Chuẩn hoá text ===== */
 function normalizeText(str) {
-  return str
-    .toLowerCase()
-    .replace(/\s+/g, "")
-    .replace(/[^a-z0-9]/g, "");
+  return str.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
 }
 
 /* ===== Map ngân hàng ===== */
@@ -51,23 +48,11 @@ function getBankCode(rawName) {
   return BANK_MAP[key] || null;
 }
 
-/* ===== Tải file Excel mẫu ===== */
-function downloadTemplate() {
-  const ws = XLSX.utils.aoa_to_sheet([
-    ["STK","Ngân hàng"],
-    ["1049984441","Vietcombank"],
-    ["6886241206","MB Bank"],
-    ["4552733316","BIDV"]
-  ]);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Template");
-  XLSX.writeFile(wb, "mau_qr.xlsx");
-}
-
-/* ===== Xử lý Excel ===== */
+/* ===== XỬ LÝ EXCEL ===== */
 function processExcel() {
   const fileInput = document.getElementById("fileInput");
   const des = document.getElementById("desInput").value.trim();
+
   if (!fileInput.files.length) return alert("Chọn file Excel");
   if (!des) return alert("Nhập nội dung chuyển khoản");
 
@@ -121,7 +106,7 @@ function processExcel() {
   reader.readAsArrayBuffer(fileInput.files[0]);
 }
 
-/* ===== Render lại toàn bộ ===== */
+/* ===== RENDER LẠI TOÀN BỘ ===== */
 function rerender() {
   const preview = document.getElementById("preview");
   preview.innerHTML = "";
@@ -129,7 +114,7 @@ function rerender() {
   applyFilter();
 }
 
-/* ===== Render card ===== */
+/* ===== RENDER CARD (CÓ SỬA / XOÁ) ===== */
 function renderCard(item, index) {
   const card = document.createElement("div");
   card.className = "card";
@@ -152,7 +137,14 @@ function renderCard(item, index) {
   document.getElementById("preview").appendChild(card);
 }
 
-/* ===== Sửa ===== */
+/* ===== XOÁ ===== */
+function deleteItem(index) {
+  if (!confirm("Bạn chắc chắn muốn xoá QR này?")) return;
+  qrList.splice(index, 1);
+  rerender();
+}
+
+/* ===== SỬA ===== */
 function editItem(index) {
   const item = qrList[index];
 
@@ -163,7 +155,7 @@ function editItem(index) {
   if (!newBank) return;
 
   const bankCode = getBankCode(newBank);
-  if (!bankCode) return alert("Không nhận diện được ngân hàng");
+  if (!bankCode) return alert("❌ Không nhận diện được ngân hàng");
 
   item.acc = newAcc.trim();
   item.bankRaw = newBank.trim();
@@ -178,14 +170,7 @@ function editItem(index) {
   rerender();
 }
 
-/* ===== Xoá ===== */
-function deleteItem(index) {
-  if (!confirm("Bạn chắc chắn muốn xoá?")) return;
-  qrList.splice(index,1);
-  rerender();
-}
-
-/* ===== Filter ===== */
+/* ===== FILTER ===== */
 function applyFilter() {
   const keyword = document.getElementById("searchInput").value.trim();
   const bank = document.getElementById("bankFilter").value;
@@ -202,7 +187,7 @@ function applyFilter() {
   });
 }
 
-/* ===== Build filter ngân hàng ===== */
+/* ===== BUILD FILTER ===== */
 function buildBankFilter() {
   const select = document.getElementById("bankFilter");
   select.innerHTML = `<option value="">🏷 Tất cả ngân hàng</option>`;
@@ -216,7 +201,7 @@ function buildBankFilter() {
   });
 }
 
-/* ===== Xuất Excel kết quả ===== */
+/* ===== XUẤT EXCEL KẾT QUẢ ===== */
 function exportResultExcel() {
   if (!qrList.length && !errorList.length) return alert("Chưa có dữ liệu");
 
@@ -243,30 +228,4 @@ function exportResultExcel() {
   XLSX.utils.book_append_sheet(wb, wsErr, "Loi");
 
   XLSX.writeFile(wb, "ket_qua_qr.xlsx");
-}
-
-/* ===== Xuất PDF ===== */
-async function exportPDF() {
-  if (!qrList.length) return alert("Chưa có QR");
-
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-
-  for (let i=0;i<qrList.length;i++) {
-    if (i>0) pdf.addPage();
-    const it = qrList[i];
-    pdf.text(`${it.bankRaw} - ${it.acc}`, 10, 10);
-    const img = await loadImage(it.url);
-    pdf.addImage(img, "PNG", 20, 20, 160, 160);
-  }
-  pdf.save("qr_output.pdf");
-}
-
-function loadImage(url) {
-  return new Promise(resolve => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
-    img.src = url;
-  });
 }
