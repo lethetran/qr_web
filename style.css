@@ -1,136 +1,86 @@
 :root {
-  --bg: #f5f7fb;
-  --card: #ffffff;
-  --primary: #2563eb;
-  --danger: #dc2626;
-  --text: #1f2933;
-  --muted: #6b7280;
+  --bg:#f5f7fb; --card:#fff; --primary:#2563eb; --danger:#dc2626;
+  --text:#1f2933; --muted:#6b7280;
+}
+*{box-sizing:border-box}
+
+body{
+  margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--text);
 }
 
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--text);
+header{
+  padding:20px;background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;
 }
 
-header {
-  padding: 20px;
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  color: #fff;
+.panel{
+  background:#fff;margin:20px;padding:16px;border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
 }
 
-.panel {
-  background: #fff;
-  margin: 20px;
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+.ghost{
+  background:transparent;border:1px dashed var(--primary);color:var(--primary);
+  padding:8px 12px;border-radius:6px;cursor:pointer;
 }
 
-.ghost {
-  background: transparent;
-  border: 1px dashed var(--primary);
-  color: var(--primary);
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
+.form{display:grid;gap:10px;margin-top:12px}
+.form label{font-size:14px;color:var(--muted)}
+.form input{padding:10px;border-radius:6px;border:1px solid #d1d5db}
+
+.actions{display:flex;gap:10px}
+
+button{
+  background:var(--primary);border:none;color:#fff;
+  padding:10px 16px;border-radius:8px;cursor:pointer;font-size:14px
+}
+button.secondary{background:#374151}
+button:hover{opacity:.9}
+
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:10px;margin:10px 20px
+}
+.toolbar input,.toolbar select{
+  padding:8px;border-radius:6px;border:1px solid #d1d5db
 }
 
-.form {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin-top: 12px;
+/* GRID QR */
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;padding:0 20px 30px
 }
 
-.form label { font-size: 14px; color: var(--muted); }
-
-.form input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
+/* CARD */
+.card{
+  background:var(--card);border-radius:14px;padding:14px;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  display:flex;flex-direction:column;align-items:center
 }
-
-.actions { display: flex; gap: 10px; }
-
-button {
-  background: var(--primary);
-  border: none;
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
+.card .bank{font-weight:600}
+.card .acc{font-size:13px;color:var(--muted)}
+.card .des{font-size:12px;margin-bottom:6px}
+.card img{
+  width:100%;max-width:200px;aspect-ratio:1/1;object-fit:contain;margin:8px 0
 }
-button.secondary { background: #374151; }
-button:hover { opacity: 0.9; }
+.card .actions{display:flex;gap:6px;margin-top:auto}
 
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 10px 20px;
+button.mini{
+  padding:4px 8px;font-size:12px;border-radius:6px;border:none;
+  background:var(--primary);color:#fff;cursor:pointer
 }
+button.mini.danger{background:var(--danger)}
 
-.toolbar input, .toolbar select {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
+.card a{font-size:12px;text-decoration:none;color:var(--primary)}
+
+/* ERROR TABLE */
+#errorSection{
+  margin:20px;background:#fff3f3;padding:12px;border-radius:10px
 }
+#errorSection h2{color:#dc2626}
 
-/* ===== GRID QR RESPONSIVE ===== */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  padding: 0 20px 30px;
+#errorTable{
+  width:100%;border-collapse:collapse;margin-top:10px;font-size:13px
 }
-
-/* ===== CARD QR ===== */
-.card {
-  background: var(--card);
-  border-radius: 14px;
-  padding: 14px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.card .bank { font-weight: 600; }
-.card .acc { font-size: 13px; color: var(--muted); }
-.card .des { font-size: 12px; margin-bottom: 6px; }
-
-.card img {
-  width: 100%;
-  max-width: 200px;
-  aspect-ratio: 1/1;
-  object-fit: contain;
-  margin: 8px 0;
-}
-
-.card .actions {
-  display: flex;
-  gap: 6px;
-  margin-top: auto;
-}
-
-button.mini {
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 6px;
-  border: none;
-  background: var(--primary);
-  color: #fff;
-  cursor: pointer;
-}
-button.mini.danger { background: var(--danger); }
-
-.card a {
-  font-size: 12px;
-  text-decoration: none;
-  color: var(--primary);
+#errorTable th{background:#fee2e2}
+#errorTable td,#errorTable th{
+  border:1px solid #fca5a5;padding:6px;text-align:left
 }

@@ -9,7 +9,7 @@
 <body>
   <header>
     <h1>💳 Tạo QR chuyển khoản</h1>
-    <p>Import Excel → Chuẩn hoá ngân hàng → Tạo QR → Sửa/Xoá → Xuất kết quả</p>
+    <p>Import Excel → Chuẩn hoá → Tạo QR → Sửa/Xoá → Xuất kết quả</p>
   </header>
 
   <section class="panel">
@@ -29,6 +29,7 @@
     </div>
   </section>
 
+  <!-- TOOLBAR -->
   <section>
     <div class="toolbar">
       <input type="text" id="searchInput" placeholder="🔍 Tìm theo STK..." oninput="applyFilter()" />
@@ -38,8 +39,24 @@
       <button onclick="exportResultExcel()">📄 Xuất Excel kết quả</button>
     </div>
 
-    <h2>Kết quả</h2>
+    <h2>Kết quả QR</h2>
     <div id="preview" class="grid"></div>
+  </section>
+
+  <!-- HIỂN THỊ LỖI -->
+  <section id="errorSection" style="display:none;">
+    <h2>❌ Danh sách lỗi</h2>
+    <table id="errorTable">
+      <thead>
+        <tr>
+          <th>Dòng Excel</th>
+          <th>STK</th>
+          <th>Ngân hàng</th>
+          <th>Lý do</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </section>
 
   <!-- Libs -->
