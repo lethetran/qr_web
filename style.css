@@ -1,274 +1,86 @@
-/* --- BIẾN MÀU SẮC (PASTEL & CUTE) --- */
 :root {
-  --bg: #fff5f8; 
-  --card-bg: #ffffff;
-  --primary: #ff85a2;      /* Hồng Pastel chính */
-  --primary-hover: #ff6b8d;
-  --secondary: #a29bfe;    /* Tím Pastel */
-  --danger: #ff7675;       /* Đỏ Pastel */
-  --text-main: #4a4a4a;
-  --text-muted: #888888;
-  --header-grad: linear-gradient(135deg, #ff85a2 0%, #a29bfe 100%);
-  --shadow: 0 10px 25px rgba(255, 133, 162, 0.1);
+  --bg:#f5f7fb; --card:#fff; --primary:#2563eb; --danger:#dc2626;
+  --text:#1f2933; --muted:#6b7280;
+}
+*{box-sizing:border-box}
+
+body{
+  margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--text);
 }
 
-/* --- RESET & CHUNG --- */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  transition: all 0.3s ease;
+header{
+  padding:20px;background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;
 }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg);
-  color: var(--text-main);
-  line-height: 1.6;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Đảm bảo body luôn cao hết màn hình để đẩy footer xuống */
+.panel{
+  background:#fff;margin:20px;padding:16px;border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
 }
 
-/* --- HEADER --- */
-header {
-  padding: 50px 20px;
-  background: var(--header-grad);
-  color: #fff;
-  text-align: center;
-  border-bottom-left-radius: 40px;
-  border-bottom-right-radius: 40px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.ghost{
+  background:transparent;border:1px dashed var(--primary);color:var(--primary);
+  padding:8px 12px;border-radius:6px;cursor:pointer;
 }
 
-header h1 {
-  font-size: 2.2rem;
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+.form{display:grid;gap:10px;margin-top:12px}
+.form label{font-size:14px;color:var(--muted)}
+.form input{padding:10px;border-radius:6px;border:1px solid #d1d5db}
+
+.actions{display:flex;gap:10px}
+
+button{
+  background:var(--primary);border:none;color:#fff;
+  padding:10px 16px;border-radius:8px;cursor:pointer;font-size:14px
+}
+button.secondary{background:#374151}
+button:hover{opacity:.9}
+
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:10px;margin:10px 20px
+}
+.toolbar input,.toolbar select{
+  padding:8px;border-radius:6px;border:1px solid #d1d5db
 }
 
-header p {
-  font-weight: 300;
-  opacity: 0.9;
+/* GRID QR */
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;padding:0 20px 30px
 }
 
-/* --- BẢNG ĐIỀU KHIỂN (PANEL) --- */
-.panel {
-  background: var(--card-bg);
-  margin: -40px auto 20px;
-  padding: 30px;
-  width: 90%;
-  max-width: 900px;
-  border-radius: 25px;
-  box-shadow: var(--shadow);
-  z-index: 10;
+/* CARD */
+.card{
+  background:var(--card);border-radius:14px;padding:14px;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  display:flex;flex-direction:column;align-items:center
 }
-
-.ghost {
-  background: #fff;
-  border: 2px dashed var(--primary);
-  color: var(--primary);
-  padding: 12px;
-  border-radius: 15px;
-  cursor: pointer;
-  font-weight: bold;
-  width: 100%;
-  margin-bottom: 20px;
+.card .bank{font-weight:600}
+.card .acc{font-size:13px;color:var(--muted)}
+.card .des{font-size:12px;margin-bottom:6px}
+.card img{
+  width:100%;max-width:200px;aspect-ratio:1/1;object-fit:contain;margin:8px 0
 }
-.ghost:hover { background: #fff0f3; }
+.card .actions{display:flex;gap:6px;margin-top:auto}
 
-.form {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
+button.mini{
+  padding:4px 8px;font-size:12px;border-radius:6px;border:none;
+  background:var(--primary);color:#fff;cursor:pointer
 }
+button.mini.danger{background:var(--danger)}
 
-.form label {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-main);
-  margin-bottom: -10px;
+.card a{font-size:12px;text-decoration:none;color:var(--primary)}
+
+/* ERROR TABLE */
+#errorSection{
+  margin:20px;background:#fff3f3;padding:12px;border-radius:10px
 }
+#errorSection h2{color:#dc2626}
 
-.form input {
-  padding: 12px 15px;
-  border-radius: 12px;
-  border: 2px solid #f0f0f0;
-  outline: none;
-  font-size: 15px;
+#errorTable{
+  width:100%;border-collapse:collapse;margin-top:10px;font-size:13px
 }
-
-.form input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 8px rgba(255, 133, 162, 0.2);
+#errorTable th{background:#fee2e2}
+#errorTable td,#errorTable th{
+  border:1px solid #fca5a5;padding:6px;text-align:left
 }
-
-.actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-top: 10px;
-}
-
-/* --- NÚT BẤM --- */
-button {
-  background: var(--primary);
-  border: none;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(255, 133, 162, 0.4);
-}
-
-button.secondary { background: var(--secondary); }
-button.secondary:hover { box-shadow: 0 5px 15px rgba(162, 155, 254, 0.4); }
-
-/* --- TOOLBAR --- */
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  padding: 20px;
-  justify-content: center;
-}
-
-.toolbar input, .toolbar select {
-  padding: 10px 15px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  min-width: 200px;
-}
-
-/* --- LƯỚI QR (SỬA LỖI HIỂN THỊ) --- */
-h2 {
-  text-align: center;
-  margin: 20px 0;
-  color: var(--primary);
-  font-size: 1.5rem;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
-  padding: 20px 5%;
-  align-items: stretch; /* Đảm bảo các card cao bằng nhau */
-}
-
-/* --- THẺ CARD CHI TIẾT --- */
-.card {
-  background: var(--card-bg);
-  border-radius: 25px;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.03);
-  display: flex;
-  flex-direction: column; /* Xếp dọc các thành phần */
-  align-items: center;
-  text-align: center;
-  border: 1px solid rgba(255, 133, 162, 0.1);
-  position: relative;
-}
-
-.card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-}
-
-.card .bank {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--primary);
-  margin-bottom: 5px;
-  text-transform: uppercase;
-}
-
-.card .acc {
-  font-size: 15px;
-  background: #fff0f3;
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 5px;
-}
-
-.card .des {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-style: italic;
-  margin-bottom: 10px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Giới hạn 2 dòng nội dung */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.card img {
-  width: 100%;
-  max-width: 220px;
-  aspect-ratio: 1/1;
-  object-fit: contain;
-  margin-bottom: 15px;
-  border-radius: 15px;
-  border: 1px solid #f9f9f9;
-}
-
-.card .actions {
-  margin-top: auto; /* Quan trọng: Đẩy các nút xuống đáy thẻ */
-  display: flex;
-  gap: 8px;
-  width: 100%;
-}
-
-button.mini {
-  padding: 8px 12px;
-  font-size: 12px;
-  border-radius: 8px;
-}
-
-button.danger { background: var(--danger); }
-
-/* --- FOOTER (LUÔN CHẠY DƯỚI CÙNG) --- */
-footer {
-  margin-top: auto;
-  padding: 25px;
-  background: #fff;
-  text-align: center;
-  border-top: 1px solid #eee;
-  font-size: 14px;
-  color: var(--text-main);
-}
-
-footer b {
-  color: var(--primary);
-  font-weight: 700;
-}
-
-/* --- BẢNG LỖI --- */
-#errorSection {
-  margin: 20px 5%;
-  background: #fff0f0;
-  padding: 25px;
-  border-radius: 25px;
-}
-#errorTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  background: #fff;
-  border-radius: 15px;
-  overflow: hidden;
-}
-#errorTable th { background: var(--danger); color: #fff; padding: 12px; }
-#errorTable td { padding: 10px; border-bottom: 1px solid #eee; }

@@ -113,23 +113,23 @@ function rerender(){
   applyFilter();
 }
 
-function renderCard(item, index) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.dataset.acc = item.acc;
-  card.dataset.bank = item.bankCode;
+function renderCard(item,index){
+  const card=document.createElement("div");
+  card.className="card";
+  card.dataset.acc=item.acc;
+  card.dataset.bank=item.bankCode;
 
-  const des = document.getElementById("desInput").value.trim();
+  const des=document.getElementById("desInput").value.trim();
 
-  card.innerHTML = `
+  card.innerHTML=`
     <div class="bank">${item.bankRaw}</div>
     <div class="acc">STK: ${item.acc}</div>
     <div class="des">Nội dung: ${des}</div>
-    <img src="${item.url}" alt="QR Code" />
+    <img src="${item.url}" />
     <div class="actions">
       <button class="mini" onclick="editItem(${index})">✏️ Sửa</button>
       <button class="mini danger" onclick="deleteItem(${index})">🗑 Xoá</button>
-      <button class="mini secondary" onclick="window.open('${item.url}&download=true')">⬇ Tải QR</button>
+      <a href="${item.url}&download=true" target="_blank">⬇ QR</a>
     </div>
   `;
   document.getElementById("preview").appendChild(card);
@@ -170,19 +170,18 @@ function deleteItem(index){
 
 /* ================= FILTER ================= */
 function applyFilter(){
-  const kw = document.getElementById("searchInput").value.trim().toLowerCase();
-  const bank = document.getElementById("bankFilter").value;
+  const kw=document.getElementById("searchInput").value.trim();
+  const bank=document.getElementById("bankFilter").value;
 
-  document.querySelectorAll(".card").forEach(c => {
-    const acc = c.dataset.acc.toLowerCase();
-    const b = c.dataset.bank;
+  document.querySelectorAll(".card").forEach(c=>{
+    const acc=c.dataset.acc;
+    const b=c.dataset.bank;
 
-    let show = true;
-    if(kw && !acc.includes(kw)) show = false;
-    if(bank && b !== bank) show = false;
+    let show=true;
+    if(kw && !acc.includes(kw)) show=false;
+    if(bank && b!==bank) show=false;
 
-    // Sửa chỗ này: Dùng flex để giữ đúng layout của Card
-    c.style.display = show ? "flex" : "none";
+    c.style.display=show?"flex":"none";
   });
 }
 
