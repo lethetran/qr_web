@@ -214,24 +214,68 @@ function renderErrors(){
 
 /* ===== Xuất Excel kết quả ===== */
 function exportResultExcel(){
-  if(!qrList.length && !errorList.length) return alert("Chưa có dữ liệu");
+  if(!qrList.length && !errorList.length){
+    alert("Chưa có dữ liệu");
+    return;
+  }
 
-  const wb=XLSX.utils.book_new();
+  const rows = [];
 
-  const okData=qrList.map((i,idx)=>({
-    "STT":idx+1,"STK":i.acc,"Ngân hàng":i.bankRaw,
-    "Mã NH":i.bankCode,"Link QR":i.url
-  }));
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(okData),"Thanh_cong");
+  // ===== OK rows =====
+  qrList.forEach(i => {
+    rows.push({
+      "STT": rows.length + 1,
+      "Dòng Excel": "",
+      "STK": i.acc,
+      "Ngân hàng": i.bankRaw,
+      "Mã NH": i.bankCode,
+      "Link QR": i.url,
+      "Trạng thái": "OK",
+      "Lỗi": ""
+    });
+  });
 
-  const errData=errorList.map((e,idx)=>({
-    "STT":idx+1,"Dòng Excel":e.row,"STK":e.stk,
-    "Ngân hàng":e.bank,"Lỗi":e.reason
-  }));
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(errData),"Loi");
+  // ===== ERROR rows =====
+  errorList.forEach(e => {
+    rows.push({
+      "STT": rows.length + 1,
+      "Dòng Excel": e.row,
+      "STK": e.stk,
+      "Ngân hàng": e.bank,
+      "Mã NH": "",
+      "Link QR": "",
+      "Trạng thái": "LỖI",
+      "Lỗi": e.reason
+    });
+  });
 
-  XLSX.writeFile(wb,"ket_qua_qr.xlsx");
+  const ws = XLSX.utils.json_to_sheet(rows);
+
+  // ===== TÔ MÀU DÒNG LỖI =====
+  const range = XLSX.utils.decode_range(ws["!ref"]);
+
+  for(let R = range.s.r + 1; R <= range.e.r; R++){
+    const statusCell = ws[XLSX.utils.encode_cell({ r: R, c: 6 })]; // cột "Trạng thái"
+    if(statusCell && statusCell.v === "LỖI"){
+      for(let C = range.s.c; C <= range.e.c; C++){
+        const cellAddr = XLSX.utils.encode_cell({ r: R, c: C });
+        if(!ws[cellAddr]) continue;
+
+        ws[cellAddr].s = {
+          fill: {
+            fgColor: { rgb: "FFCCCC" }   // nền đỏ nhạt
+          }
+        };
+      }
+    }
+  }
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Ket_qua");
+
+  XLSX.writeFile(wb, "ket_qua_qr.xlsx");
 }
+
 
 /* ===== Xuất PDF ===== */
 async function exportPDF(){
