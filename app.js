@@ -170,18 +170,19 @@ function deleteItem(index){
 
 /* ================= FILTER ================= */
 function applyFilter(){
-  const kw=document.getElementById("searchInput").value.trim();
-  const bank=document.getElementById("bankFilter").value;
+  const kw = document.getElementById("searchInput").value.trim().toLowerCase();
+  const bank = document.getElementById("bankFilter").value;
 
-  document.querySelectorAll(".card").forEach(c=>{
-    const acc=c.dataset.acc;
-    const b=c.dataset.bank;
+  document.querySelectorAll(".card").forEach(c => {
+    const acc = c.dataset.acc.toLowerCase();
+    const b = c.dataset.bank;
 
-    let show=true;
-    if(kw && !acc.includes(kw)) show=false;
-    if(bank && b!==bank) show=false;
+    let show = true;
+    if(kw && !acc.includes(kw)) show = false;
+    if(bank && b !== bank) show = false;
 
-    c.style.display=show?"flex":"none";
+    // Sửa chỗ này: Dùng flex để giữ đúng layout của Card
+    c.style.display = show ? "flex" : "none";
   });
 }
 
