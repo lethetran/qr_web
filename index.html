@@ -2,92 +2,70 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>QR Magic - Lê Thế Trân</title>
+  <title>QR Generator - SePay</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="header-badge">✨ Tool by Trân ✨</div>
-      <h1>QR Magic Generator</h1>
-      <p>Giải pháp tạo mã chuyển khoản hàng loạt nhanh chóng & dễ thương</p>
-    </header>
+  <header>
+    <h1>💳 Tạo QR chuyển khoản</h1>
+    <p>Import Excel → Chuẩn hoá → Tạo QR → Sửa/Xoá → Xuất kết quả</p>
+  </header>
 
-    <main>
-      <section class="card-panel shadow-soft">
-        <div class="panel-header">
-          <button class="btn-ghost" onclick="downloadTemplate()">🌸 Tải file mẫu .xlsx</button>
-        </div>
+  <section class="panel">
+    <button class="ghost" onclick="downloadTemplate()">📥 Tải file Excel mẫu</button>
 
-        <div class="form-grid">
-          <div class="input-group">
-            <label>📂 File Excel dữ liệu</label>
-            <div class="custom-file">
-              <input type="file" id="fileInput" accept=".xlsx,.xls" />
-            </div>
-          </div>
+    <div class="form">
+      <label>📄 File Excel</label>
+      <input type="file" id="fileInput" accept=".xlsx,.xls" />
 
-          <div class="input-group">
-            <label>💬 Nội dung chuyển khoản chung</label>
-            <input type="text" id="desInput" placeholder="Ví dụ: Hoc phi thang 10..." />
-          </div>
-        </div>
+      <label>✏️ Nội dung chuyển khoản</label>
+      <input type="text" id="desInput" placeholder="VD: Thanh toan hoc phi" />
 
-        <div class="form-actions">
-          <button class="btn-main" onclick="processExcel()">🚀 Bắt đầu tạo mã</button>
-          <button class="btn-secondary" onclick="exportPDF()">📄 Xuất file PDF</button>
-        </div>
-      </section>
-
-      <section class="results-section">
-        <div class="toolbar-glass">
-          <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Tìm theo STK..." oninput="applyFilter()" />
-          </div>
-          <select id="bankFilter" onchange="applyFilter()">
-            <option value="">🌈 Tất cả ngân hàng</option>
-          </select>
-          <button class="btn-outline" onclick="exportResultExcel()">📊 Xuất Excel</button>
-        </div>
-
-        <div id="preview" class="qr-grid"></div>
-      </section>
-
-      <section id="errorSection" class="error-box" style="display:none;">
-        <h3>❌ Cần kiểm tra lại dữ liệu</h3>
-        <div class="table-container">
-          <table id="errorTable">
-            <thead>
-              <tr>
-                <th>Dòng</th>
-                <th>STK</th>
-                <th>Ngân hàng</th>
-                <th>Lý do</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <footer class="footer-fixed">
-    <div class="footer-blur"></div>
-    <div class="footer-content">
-      <div class="footer-item">✨ Tạo bởi <strong>Lê Thế Trân</strong></div>
-      <div class="footer-sep"></div>
-      <div class="footer-item">🎓 Khoa Hệ thống Thông tin</div>
-      <div class="footer-sep"></div>
-      <div class="footer-item">📞 <a href="tel:0332811699">0332811699</a></div>
+      <div class="actions">
+        <button onclick="processExcel()">🚀 Tạo QR</button>
+        <button class="secondary" onclick="exportPDF()">📄 Xuất PDF</button>
+      </div>
     </div>
-  </footer>
+  </section>
 
-  <!-- IMPORTANT: chỉ dùng 1 thư viện Excel để hỗ trợ style -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <script src="app.js"></script>
+  <!-- TOOLBAR -->
+  <section>
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="🔍 Tìm theo STK..." oninput="applyFilter()" />
+      <select id="bankFilter" onchange="applyFilter()">
+        <option value="">🏷 Tất cả ngân hàng</option>
+      </select>
+      <button onclick="exportResultExcel()">📄 Xuất Excel kết quả</button>
+    </div>
+
+    <h2>Kết quả QR</h2>
+    <div id="preview" class="grid"></div>
+  </section>
+
+  <!-- HIỂN THỊ LỖI -->
+  <section id="errorSection" style="display:none;">
+    <h2>❌ Danh sách lỗi</h2>
+    <table id="errorTable">
+      <thead>
+        <tr>
+          <th>Dòng Excel</th>
+          <th>STK</th>
+          <th>Ngân hàng</th>
+          <th>Lý do</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Libs -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<!-- App -->
+<script src="app.js"></script>
+
 </body>
 </html>
