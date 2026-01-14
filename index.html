@@ -9,7 +9,7 @@
 <body>
   <header>
     <h1>💳 Tạo QR chuyển khoản</h1>
-    <p>Import Excel → Chuẩn hoá ngân hàng → Xuất QR đẹp</p>
+    <p>Import Excel → Chuẩn hoá ngân hàng → Tạo QR → Sửa/Xoá → Xuất kết quả</p>
   </header>
 
   <section class="panel">
@@ -30,6 +30,14 @@
   </section>
 
   <section>
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="🔍 Tìm theo STK..." oninput="applyFilter()" />
+      <select id="bankFilter" onchange="applyFilter()">
+        <option value="">🏷 Tất cả ngân hàng</option>
+      </select>
+      <button onclick="exportResultExcel()">📄 Xuất Excel kết quả</button>
+    </div>
+
     <h2>Kết quả</h2>
     <div id="preview" class="grid"></div>
   </section>
