@@ -164,3 +164,19 @@ function loadImage(url) {
     img.src = url;
   });
 }
+// ==== hiển thị card đẹp ====
+const card = document.createElement("div");
+card.className = "card";
+
+card.innerHTML = `
+  <div class="bank">${bankRaw}</div>
+  <div class="acc">STK: ${acc}</div>
+  <div class="des">Nội dung: ${des}</div>
+  <img src="${url}" alt="QR ${acc}" />
+  <div class="actions">
+    <a href="${url}&download=true" target="_blank">⬇ Tải QR</a>
+    <a href="${url}" target="_blank">🔍 Xem lớn</a>
+  </div>
+`;
+
+document.getElementById("preview").appendChild(card);
