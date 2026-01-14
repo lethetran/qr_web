@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #f7f7f7;
+}
+
+.box {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+button {
+  padding: 8px 14px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+#preview {
+  margin-top: 20px;
+}
+
+#preview img {
+  width: 160px;
+  margin: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+}

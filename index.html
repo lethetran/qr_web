@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR Generator - SePay</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>📄 Tạo QR từ Excel</h2>
+
+  <div class="box">
+    <input type="file" id="fileInput" accept=".xlsx,.xls" />
+    <br><br>
+
+    <label>Nội dung chuyển khoản (des):</label><br>
+    <input type="text" id="desInput" placeholder="VD: Thanh toan hoc phi" />
+    <br><br>
+
+    <button onclick="processExcel()">Tạo QR</button>
+    <button onclick="exportPDF()">Xuất PDF</button>
+  </div>
+
+  <h3>Kết quả</h3>
+  <div id="preview"></div>
+
+  <!-- Thư viện -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
