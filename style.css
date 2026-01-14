@@ -1,86 +1,153 @@
 :root {
-  --bg:#f5f7fb; --card:#fff; --primary:#2563eb; --danger:#dc2626;
-  --text:#1f2933; --muted:#6b7280;
-}
-*{box-sizing:border-box}
-
-body{
-  margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:var(--bg);color:var(--text);
-}
-
-header{
-  padding:20px;background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;
+  --bg: #fff5f7; /* Hồng nhạt cute */
+  --card: #ffffff;
+  --primary: #ff85a2; /* Hồng đậm pastel */
+  --primary-hover: #ff6b8d;
+  --secondary: #a29bfe; /* Tím pastel */
+  --danger: #ff7675;
+  --text: #4a4a4a;
+  --muted: #a0a0a0;
+  --header-grad: linear-gradient(135deg, #ff85a2 0%, #a29bfe 100%);
 }
 
-.panel{
-  background:#fff;margin:20px;padding:16px;border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
+* { box-sizing: border-box; transition: all 0.3s ease; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.ghost{
-  background:transparent;border:1px dashed var(--primary);color:var(--primary);
-  padding:8px 12px;border-radius:6px;cursor:pointer;
+header {
+  padding: 40px 20px;
+  background: var(--header-grad);
+  color: #fff;
+  text-align: center;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  box-shadow: 0 4px 15px rgba(255, 133, 162, 0.3);
 }
 
-.form{display:grid;gap:10px;margin-top:12px}
-.form label{font-size:14px;color:var(--muted)}
-.form input{padding:10px;border-radius:6px;border:1px solid #d1d5db}
+header h1 { margin: 0; font-size: 2rem; }
+header p { opacity: 0.9; font-weight: 300; }
 
-.actions{display:flex;gap:10px}
-
-button{
-  background:var(--primary);border:none;color:#fff;
-  padding:10px 16px;border-radius:8px;cursor:pointer;font-size:14px
-}
-button.secondary{background:#374151}
-button:hover{opacity:.9}
-
-.toolbar{
-  display:flex;flex-wrap:wrap;gap:10px;margin:10px 20px
-}
-.toolbar input,.toolbar select{
-  padding:8px;border-radius:6px;border:1px solid #d1d5db
+.panel {
+  background: var(--card);
+  margin: -30px 20px 20px;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 10;
 }
 
-/* GRID QR */
-.grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;padding:0 20px 30px
+.ghost {
+  background: #fff;
+  border: 2px dashed var(--primary);
+  color: var(--primary);
+  padding: 10px 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  margin-bottom: 15px;
+}
+.ghost:hover { background: var(--bg); }
+
+.form { display: grid; gap: 15px; }
+.form label { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: -5px; }
+.form input {
+  padding: 12px;
+  border-radius: 12px;
+  border: 2px solid #eee;
+  outline: none;
+}
+.form input:focus { border-color: var(--primary); }
+
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+button {
+  background: var(--primary);
+  border: none;
+  color: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(255, 133, 162, 0.2);
+}
+button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(255, 133, 162, 0.3); background: var(--primary-hover); }
+button.secondary { background: var(--secondary); box-shadow: 0 4px 6px rgba(162, 155, 254, 0.2); }
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px;
+  padding: 15px;
+  background: #fff;
+  border-radius: 15px;
+}
+.toolbar input, .toolbar select {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #eee;
 }
 
-/* CARD */
-.card{
-  background:var(--card);border-radius:14px;padding:14px;
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
-  display:flex;flex-direction:column;align-items:center
-}
-.card .bank{font-weight:600}
-.card .acc{font-size:13px;color:var(--muted)}
-.card .des{font-size:12px;margin-bottom:6px}
-.card img{
-  width:100%;max-width:200px;aspect-ratio:1/1;object-fit:contain;margin:8px 0
-}
-.card .actions{display:flex;gap:6px;margin-top:auto}
+h2 { padding: 0 20px; font-size: 1.2rem; color: var(--primary); }
 
-button.mini{
-  padding:4px 8px;font-size:12px;border-radius:6px;border:none;
-  background:var(--primary);color:#fff;cursor:pointer
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 0 20px 50px;
 }
-button.mini.danger{background:var(--danger)}
 
-.card a{font-size:12px;text-decoration:none;color:var(--primary)}
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+  text-align: center;
+  border: 1px solid rgba(255, 133, 162, 0.1);
+}
+.card:hover { transform: scale(1.02); }
+.card .bank { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+.card .acc { font-size: 14px; color: var(--muted); margin: 5px 0; }
+.card .des { font-style: italic; font-size: 12px; color: #888; }
+.card img {
+  width: 100%;
+  border-radius: 15px;
+  margin: 15px 0;
+  background: #fafafa;
+}
 
-/* ERROR TABLE */
-#errorSection{
-  margin:20px;background:#fff3f3;padding:12px;border-radius:10px
+/* FOOTER LUÔN CHẠY */
+footer {
+  margin-top: auto;
+  padding: 20px;
+  background: #fff;
+  text-align: center;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
 }
-#errorSection h2{color:#dc2626}
+footer b { color: var(--primary); }
 
-#errorTable{
-  width:100%;border-collapse:collapse;margin-top:10px;font-size:13px
+#errorSection {
+  margin: 20px;
+  background: #fff0f0;
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid #ffcccc;
 }
-#errorTable th{background:#fee2e2}
-#errorTable td,#errorTable th{
-  border:1px solid #fca5a5;padding:6px;text-align:left
-}
+#errorTable { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 10px; }
+#errorTable th { background: #ff7675; color: #fff; padding: 12px; }
+#errorTable td { padding: 10px; border-bottom: 1px solid #eee; background: #fff; }
