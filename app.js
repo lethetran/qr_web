@@ -90,11 +90,11 @@ function processExcel(){
 
       let url = `https://qr.sepay.vn/img?acc=${acc}&bank=${bankCode}`;
 
-      if (amount !== "") {
+      if(amount !== ""){
         url += `&amount=${amount}`;
       }
 
-      if (des !== "") {
+      if(des !== ""){
         url += `&des=${encodeURIComponent(des)}`;
       }
 
@@ -113,7 +113,7 @@ function processExcel(){
   reader.readAsArrayBuffer(fileInput.files[0]);
 }
 
-/* ================= RENDER QR ================= */
+/* ================= RENDER ================= */
 function rerender(){
   const preview = document.getElementById("preview");
   preview.innerHTML="";
@@ -146,6 +146,8 @@ function renderCard(item,index){
 /* ================= SỬA ================= */
 function editItem(index){
   const it = qrList[index];
+  const amount = document.getElementById("amountInput").value.trim();
+  const des = document.getElementById("desInput").value.trim();
 
   const newAcc = prompt("Sửa STK:", it.acc);
   if(!newAcc) return;
@@ -160,12 +162,19 @@ function editItem(index){
   it.bankRaw = newBank.trim();
   it.bankCode = code;
 
-  const des=document.getElementById("desInput").value.trim();
-  it.url =
-    `https://qr.sepay.vn/img?acc=${it.acc}`+
-    `&bank=${it.bankCode}&amount=&des=${encodeURIComponent(des)}`+
-    `&template=vietqr&download=false`;
+  let url = `https://qr.sepay.vn/img?acc=${it.acc}&bank=${it.bankCode}`;
 
+  if(amount !== ""){
+    url += `&amount=${amount}`;
+  }
+
+  if(des !== ""){
+    url += `&des=${encodeURIComponent(des)}`;
+  }
+
+  url += `&template=compact&download=1`;
+
+  it.url = url;
   rerender();
 }
 
@@ -228,91 +237,4 @@ function renderErrors(){
   });
 
   sec.style.display="block";
-}
-
-/* ================= XUẤT EXCEL – 1 SHEET + TÔ ĐỎ ================= */
-function exportResultExcel(){
-  if(!qrList.length && !errorList.length){
-    alert("Chưa có dữ liệu");
-    return;
-  }
-
-  const rows = [];
-
-  // ---- OK ----
-  qrList.forEach(i=>{
-    rows.push({
-      "STT": rows.length+1,
-      "Dòng Excel": "",
-      "STK": i.acc,
-      "Ngân hàng": i.bankRaw,
-      "Mã NH": i.bankCode,
-      "Link QR": i.url,
-      "Trạng thái": "OK",
-      "Lỗi": ""
-    });
-  });
-
-  // ---- LỖI ----
-  errorList.forEach(e=>{
-    rows.push({
-      "STT": rows.length+1,
-      "Dòng Excel": e.row,
-      "STK": e.stk,
-      "Ngân hàng": e.bank,
-      "Mã NH": "",
-      "Link QR": "",
-      "Trạng thái": "LỖI",
-      "Lỗi": e.reason
-    });
-  });
-
-  const ws = XLSX.utils.json_to_sheet(rows);
-
-  // ---- TÔ ĐỎ DÒNG LỖI ----
-  const range = XLSX.utils.decode_range(ws["!ref"]);
-  for(let R = range.s.r + 1; R <= range.e.r; R++){
-    const statusCell = ws[XLSX.utils.encode_cell({r:R,c:6})]; // cột Trạng thái
-    if(statusCell && statusCell.v === "LỖI"){
-      for(let C = range.s.c; C <= range.e.c; C++){
-        const addr = XLSX.utils.encode_cell({r:R,c:C});
-        if(ws[addr]){
-          ws[addr].s = {
-            fill: { fgColor: { rgb: "FFCCCC" } }
-          };
-        }
-      }
-    }
-  }
-
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Ket_qua");
-
-  XLSX.writeFile(wb, "ket_qua_qr.xlsx");
-}
-
-/* ================= XUẤT PDF ================= */
-async function exportPDF(){
-  if(!qrList.length) return alert("Chưa có QR");
-
-  const {jsPDF} = window.jspdf;
-  const pdf = new jsPDF();
-
-  for(let i=0;i<qrList.length;i++){
-    if(i>0) pdf.addPage();
-    const it = qrList[i];
-    pdf.text(`${it.bankRaw} - ${it.acc}`,10,10);
-    const img = await loadImage(it.url);
-    pdf.addImage(img,"PNG",20,20,160,160);
-  }
-  pdf.save("qr_output.pdf");
-}
-
-function loadImage(url){
-  return new Promise(res=>{
-    const img = new Image();
-    img.crossOrigin="anonymous";
-    img.onload=()=>res(img);
-    img.src=url;
-  });
 }
