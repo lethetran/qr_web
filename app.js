@@ -49,6 +49,7 @@ function downloadTemplate(){
 function processExcel(){
   const fileInput = document.getElementById("fileInput");
   const des = document.getElementById("desInput").value.trim();
+  const amount = document.getElementById("amountInput").value.trim();
 
   if(!fileInput.files.length) return alert("Chọn file Excel");
   if(!des) return alert("Nhập nội dung chuyển khoản");
@@ -87,10 +88,17 @@ function processExcel(){
         return;
       }
 
-      const url =
-        `https://qr.sepay.vn/img?acc=${acc}`+
-        `&bank=${bankCode}&amount=&des=${encodeURIComponent(des)}`+
-        `&template=vietqr&download=false`;
+      let url = `https://qr.sepay.vn/img?acc=${acc}&bank=${bank}`;
+
+                if (amount !== "") {
+                  url += `&amount=${amount}`;
+                }
+
+                if (des !== "") {
+                  url += `&des=${encodeURIComponent(des)}`;
+                }
+
+                url += `&template=${template}&download=1`;
 
       qrList.push({acc,bankRaw,bankCode,url});
     });
