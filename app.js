@@ -88,17 +88,17 @@ function processExcel(){
         return;
       }
 
-      let url = `https://qr.sepay.vn/img?acc=${acc}&bank=${bank}`;
+      let url = `https://qr.sepay.vn/img?acc=${acc}&bank=${bankCode}`;
 
-                if (amount !== "") {
-                  url += `&amount=${amount}`;
-                }
+      if (amount !== "") {
+        url += `&amount=${amount}`;
+      }
 
-                if (des !== "") {
-                  url += `&des=${encodeURIComponent(des)}`;
-                }
+      if (des !== "") {
+        url += `&des=${encodeURIComponent(des)}`;
+      }
 
-                url += `&template=${template}&download=1`;
+      url += `&template=compact&download=1`;
 
       qrList.push({acc,bankRaw,bankCode,url});
     });
