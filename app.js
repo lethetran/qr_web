@@ -9,7 +9,7 @@ function normalizeText(str){
 /* ================= MAP NGÂN HÀNG ================= */
 const BANK_MAP = {
   "vietcombank":"VCB","vcb":"VCB",
-  "vietinbank":"CTG","ctg":"CTG",
+  "vietinbank":"VietinBank","ctg":"VietinBank","Vietinbank":"VietinBank","vieTinbank":"VietinBank","vietinBank":"VietinBank"
   "bidv":"BIDV",
   "agribank":"AGRIBANK",
   "techcombank":"TCB","tcb":"TCB",
